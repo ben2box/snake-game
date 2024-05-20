@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +23,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int appleY;
     char direction = 'R';
     boolean running = false;
+    boolean moveComplete = false; //check to avoid double key press
 
     Timer timer;
     Random random;
@@ -104,8 +104,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void spawnApple() {
         appleX = random.nextInt(FullPanel.SCREEN_WIDTH / FullPanel.UNIT_SIZE) * FullPanel.UNIT_SIZE;
         appleY = random.nextInt(FullPanel.SCREEN_HEIGHT / FullPanel.UNIT_SIZE) * FullPanel.UNIT_SIZE;
-        System.out.println(appleX);
-        System.out.println(appleY);
+
     }
 
     public void move() {
@@ -122,6 +121,8 @@ public class GamePanel extends JPanel implements ActionListener {
             case 'L' -> x[0] = x[0] - FullPanel.UNIT_SIZE;
             case 'R' -> x[0] = x[0] + FullPanel.UNIT_SIZE;
         }
+
+        moveComplete = true;
 
 
     }
@@ -224,23 +225,27 @@ public class GamePanel extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if (direction != 'R') {
+                    if (direction != 'R' && moveComplete) {
                         direction = 'L';
+                        moveComplete = false;
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (direction != 'L') {
+                    if (direction != 'L' && moveComplete) {
                         direction = 'R';
+                        moveComplete = false;
                     }
                     break;
                 case KeyEvent.VK_UP:
-                    if (direction != 'D') {
+                    if (direction != 'D' && moveComplete) {
                         direction = 'U';
+                        moveComplete = false;
                     }
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (direction != 'U') {
+                    if (direction != 'U' && moveComplete) {
                         direction = 'D';
+                        moveComplete = false;
                     }
                     break;
                 case KeyEvent.VK_ENTER:
