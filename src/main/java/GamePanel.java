@@ -22,7 +22,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int appleX;
     int appleY;
 
-    ImageIcon apple = new ImageIcon("X:\\bootcamp92\\exercises_training\\SnakeGame\\src\\main\\resources\\Graphics\\apple.png");
+    ImageIcon apple = new ImageIcon("src/main/resources/Graphics/apple.png");
 
     char direction = 'R';
     boolean running = false;
@@ -38,7 +38,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     GamePanel(ScorePanel scorePanel) {
-
         this.scorePanel = scorePanel;
         random = new Random();
         this.setPreferredSize(new Dimension(FullPanel.SCREEN_WIDTH, FullPanel.SCREEN_HEIGHT));
