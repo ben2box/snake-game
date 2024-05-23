@@ -21,14 +21,20 @@ public class GamePanel extends JPanel implements ActionListener {
     static int applesEaten;
     int appleX;
     int appleY;
+
+    ImageIcon apple = new ImageIcon("X:\\bootcamp92\\exercises_training\\SnakeGame\\src\\main\\resources\\Graphics\\apple.png");
+
     char direction = 'R';
     boolean running = false;
     boolean moveComplete = false; //check to avoid double key press
 
+    boolean hardMode = false; //flags for difficulty level
+    boolean easyMode = false; //flags for difficulty level
+
     Timer timer;
     Random random;
 
-    ScorePanel scorePanel;
+    ScorePanel scorePanel; //pass it here and in constructor to allow score text update with each apple caught
 
 
     GamePanel(ScorePanel scorePanel) {
@@ -39,7 +45,24 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setBackground(new Color(50, 50, 50));
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
+        difficultySelector(); //Asks for difficulty level before starting the game
         startGame();
+    }
+
+    //Method that changes base delay of timer -> changes speed of game and difficulty
+    public void difficultySelector(){
+        String[] difficultyOption = {"Easier", "Regular (Score x2)", "Harder (Score x3)"};
+
+        int difficultySelected = JOptionPane.showOptionDialog(null, "How difficult do you want this to be?", "Skill too!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, difficultyOption, 1);
+        if (difficultySelected == 0) {
+            DELAY = 90;
+            easyMode = true;
+        } else if (difficultySelected == 1) {
+            DELAY = 75;
+        } else {
+            DELAY = 60;
+            hardMode = true;
+        }
     }
 
     public void startGame() {
@@ -69,6 +92,8 @@ public class GamePanel extends JPanel implements ActionListener {
     }
 
     public void draw(Graphics g) {
+        Graphics2D g2D = (Graphics2D) g; //this API allows me to resize the apple icon at will (in runtime)
+
         if (running) {
             //Draw Grid Lines for better view of what's happening
             /*
@@ -78,18 +103,32 @@ public class GamePanel extends JPanel implements ActionListener {
             }
             */
 
-            //Draw Apple each time it spawns
+            //Paint Apple icon each time it spawns
+
+            if (FullPanel.UNIT_SIZE == 25) {
+                g2D.drawImage(apple.getImage(), appleX, appleY - 6, 25, 31, this);
+            } else {
+                g2D.drawImage(apple.getImage(), appleX, appleY - 12, 50, 62, this);
+            }
+
+            /*
             g.setColor(Color.red);
             g.fillOval(appleX, appleY, FullPanel.UNIT_SIZE, FullPanel.UNIT_SIZE);
+            */
+
 
             //Draw each body part, slightly different tone for head and body
             for (int i = 0; i < bodyParts; i++) {
-                if (i == 0) {
-                    g.setColor(Color.green);
-                    g.fillRect(x[i], y[i], FullPanel.UNIT_SIZE, FullPanel.UNIT_SIZE);
+                if (i == 0) { //Draw/Paint head of Snake
+
+                   g.setColor(Color.green);
+                   g.fillRect(x[i], y[i], FullPanel.UNIT_SIZE, FullPanel.UNIT_SIZE);
+
                 } else {
+                    //Draw/Paint body of Snake
                     g.setColor(new Color(45, 180, 0));
                     g.fillRect(x[i], y[i], FullPanel.UNIT_SIZE, FullPanel.UNIT_SIZE);
+
                 }
             }
 
@@ -141,16 +180,58 @@ public class GamePanel extends JPanel implements ActionListener {
     public void increaseDifficulty() {
         //Difficulty Increase at certain score levels
         if (applesEaten == 5) {
-            timer.setDelay(65);
+
+            if (hardMode) {
+                timer.setDelay(60);
+            } else if (easyMode) {
+                timer.setDelay(80);
+            } else {
+                timer.setDelay(65);
+            }
         } else if (applesEaten == 10){
-            timer.setDelay(55);
+            if (hardMode) {
+                timer.setDelay(50);
+            } else if (easyMode) {
+                timer.setDelay(75);
+            } else {
+                timer.setDelay(60);
+            }
         } else if (applesEaten == 15) {
-            timer.setDelay(45);
+
+            if (hardMode) {
+                timer.setDelay(45);
+            } else if (easyMode) {
+                timer.setDelay(65);
+            } else {
+                timer.setDelay(55);
+            }
+
         } else if (applesEaten == 20) {
-            timer.setDelay(40);
+            if (hardMode) {
+                timer.setDelay(40);
+            } else if (easyMode) {
+                timer.setDelay(60);
+            } else {
+                timer.setDelay(50);
+            }
         } else if (applesEaten == 30) {
-            timer.setDelay(30);
+            if (hardMode) {
+                timer.setDelay(30);
+            } else if (easyMode) {
+                timer.setDelay(50);
+            } else {
+                timer.setDelay(40);
+            }
+        } else if (applesEaten == 40) {
+            if (hardMode) {
+                timer.setDelay(25);
+            } else if (easyMode) {
+                timer.setDelay(45);
+            } else {
+                timer.setDelay(35);
+            }
         }
+
     }
 
     public void checkCollision() {
