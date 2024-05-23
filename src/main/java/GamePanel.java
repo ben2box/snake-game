@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Objects;
 import java.util.Random;
 
 public class GamePanel extends JPanel implements ActionListener {
@@ -22,7 +23,7 @@ public class GamePanel extends JPanel implements ActionListener {
     int appleX;
     int appleY;
 
-    ImageIcon apple = new ImageIcon("src/main/resources/Graphics/apple.png");
+    ImageIcon apple = new ImageIcon(Objects.requireNonNull(getClass().getResource("/apple.png")));
 
     char direction = 'R';
     boolean running = false;
